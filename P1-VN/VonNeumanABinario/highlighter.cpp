@@ -51,16 +51,11 @@ Highlighter::Highlighter(QTextDocument *parent)
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
-    keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
-                    << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
-                    << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
-                    << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
-                    << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
-                    << "\\bshort\\b" << "\\bsignals\\b" << "\\bsigned\\b"
-                    << "\\bslots\\b" << "\\bstatic\\b" << "\\bstruct\\b"
-                    << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
-                    << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
-                    << "\\bvoid\\b" << "\\bvolatile\\b" << "\\bAdd\\b";
+    keywordPatterns << "\\bADD\\b" << "\\bSUB\\b" << "\\bAND\\b"
+                    << "\\bOR\\b" << "\\bMUL\\b" << "\\bDIV\\b"
+                    << "\\bMOV\\b" << "\\bBRM\\b" << "\\bBRI\\b"
+                    << "\\bBRME\\b" << "\\bNOP\\b" << "\\bSHL\\b"
+                    << "\\bSHR\\b" << "\\bJUMP\\b";
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegExp(pattern);
         rule.format = keywordFormat;
@@ -71,9 +66,9 @@ Highlighter::Highlighter(QTextDocument *parent)
 
 //! [2]
     /// PAra los Registros los Pongo de Color
-    classFormat.setFontWeight(QFont::Bold);
+
     classFormat.setForeground(Qt::darkCyan);
-    rule.pattern = QRegExp("\\bR[1-8]+\\b");
+    rule.pattern = QRegExp("\\bR[0-1-2-3-4-5-6-7-8-9-10-11-12-14-15]\\b");
     rule.format = classFormat;
     highlightingRules.append(rule);
 //! [2]
