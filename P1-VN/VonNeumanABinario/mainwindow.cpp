@@ -22,21 +22,24 @@ static vector<string> extractwords(string line){
 
     vector<string> words;
     string pal;
-    string s=" ";
-    string c=",";
-    for(int unsigned i=0;i<line.size();i++){
-        cout << line[i] << endl;
-        /*if(line[i].c and line[i]!=c){
-            cout << line[i] << endl;
-        }*/
+    ofstream fs("temp");
+    fs << line;
+    fs.close();
+    ifstream fw("temp");
+    while(! fw.eof() ){
+           fw >> pal;
+           words.push_back(pal);
     }
-    cout << "PASS" << endl;
+    return words;
 
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    vector<string> v;
+    ui->plainTextEdit->ensureCursorVisible();
+
+    vector<string> vwords;
+    vector< vector<string> > vtext;
 
     //Get text from user
     string line;
@@ -48,9 +51,10 @@ void MainWindow::on_pushButton_clicked()
     fstream tex;
     tex.open("code.txt");
     while (! tex.eof() ){
-      getline (tex,line);
       cout << "PASS" << endl;
-      //v = extractwords(line);
+      getline (tex,line);
+      vwords = extractwords(line);
+      vtext.push_back(vwords);
     }
 
     tex.close();
