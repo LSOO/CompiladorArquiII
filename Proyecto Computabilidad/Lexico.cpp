@@ -231,7 +231,7 @@ int EstaSig(vector<char> Alfabeto, vector<int> Estados, int** MatrizTrans, int E
 	}
 	
 	
-	if(PosLetra == -2) /// -1 porq la letra no pertenece al lenguaje del automata
+	if(PosLetra == -2) /// -2 porq la letra no pertenece al lenguaje del automata
 	{
 		return -2;
 	}
