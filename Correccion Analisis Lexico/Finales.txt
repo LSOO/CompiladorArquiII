@@ -1,0 +1,17 @@
+6 Const
+5 Const
+4 Const
+3 Const
+18 Const
+45 SaltoNC
+20 LogArt
+27 Reg
+28 Reg
+33 Etiqueta
+35 SaltoC
+50 MR+C
+34 SaltoC
+36 MAC
+41 NOp
+40 Corrim
+44 MAR
