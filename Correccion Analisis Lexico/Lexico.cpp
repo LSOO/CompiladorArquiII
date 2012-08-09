@@ -120,27 +120,43 @@ multimap<int,string> CargarEstFinales()
 	ifstream Archivo("Finales.txt");
 	
 	
-	
+	int Estado;
+	Archivo >> Estado;
+		
+	string Tipo;
+	Archivo >> Tipo;
 	while(!Archivo.eof())
-	{
-		int Estado;
+	{ 
+		
+		Finales.insert(pair<int,string>(Estado, Tipo));
 		Archivo >> Estado;
 		
-		string Tipo;
 		Archivo >> Tipo;
-		
-		cout << Tipo << endl;
-		Finales.insert(pair<int,string>(Estado, Tipo));
 	}
 	
 	Archivo.close();
+	Finales.insert(pair<int,string>(Estado, Tipo));
 	return Finales;
 }
 
 
 
+/// Funcion que retorna si el estado al que llego es estado final
+/// 1 si llego a estado Final, 0 no llego a estado final
+int SiEsFinal(multimap<int,string> EFinal, int NEstado)
+{
+	return EFinal.count(NEstado);	
+}
+	
 
+/// Funcion que retorna el token al q al que pertenece el estado final
+/// Esta funcion se utilizacion cuando SiEsFinal retorna 1, porq si retorna 1 ese estado tiene un token asignado y es un estado final
+string TokenEstado(multimap<int,string> EFinal, int NEstado)
+{
+	return EFinal.find(NEstado)->second;
+}
 
+/*
 int main()
 {	
 	
@@ -149,11 +165,35 @@ int main()
 	int** Incidencia = MatrizIncidencia(53, int(Alfabeto.size()), Alfabeto);
 	
 	
-	cout << "Estado Siguiente:   " << EstadoSiguiente(Alfabeto, Incidencia, 0, '') << endl;
 	
 	
 	multimap<int,string>  LS;
 	LS = CargarEstFinales();
+	
+	cout << "Token Estado Final:   " << TokenEstado(LS, SiEsFinal(LS, EstadoSiguiente(Alfabeto, Incidencia, 0, ';'))) << endl;
+	return 0;
+	
+}*/
+
+
+int main()
+{	
+	
+	vector<char> Alfabeto = CargarAlfabeto();
+
+	int** Incidencia = MatrizIncidencia(54, int(Alfabeto.size()), Alfabeto);
+	
+	
+	
+	int a;
+	a = EstadoSiguiente(Alfabeto, Incidencia, 51, ']');
+	cout << "Estado Siguiente:   " << a << endl;
+	
+	
+	multimap<int,string>  LS;
+	LS = CargarEstFinales();
+	
+	cout << "Token:   " << TokenEstado(LS, a) << endl;
 	
 	return 0;
 	
