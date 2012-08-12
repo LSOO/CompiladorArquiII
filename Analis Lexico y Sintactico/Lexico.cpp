@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
+#include "ManejadorLineas.h"
 using namespace std;
 
 /// vector q retorna un vector con los alfabetos del automata 
@@ -156,45 +157,166 @@ string TokenEstado(multimap<int,string> EFinal, int NEstado)
 	return EFinal.find(NEstado)->second;
 }
 
-/*
-int main()
-{	
-	
-	vector<char> Alfabeto = CargarAlfabeto();
-
-	int** Incidencia = MatrizIncidencia(53, int(Alfabeto.size()), Alfabeto);
-	
-	
-	
-	
-	multimap<int,string>  LS;
-	LS = CargarEstFinales();
-	
-	cout << "Token Estado Final:   " << TokenEstado(LS, SiEsFinal(LS, EstadoSiguiente(Alfabeto, Incidencia, 0, ';'))) << endl;
-	return 0;
-	
-}*/
 
 
 int main()
 {	
-	
+
+
+
+
+
+	/// ESTO SE CARGA AL INICIO DEL PROGRAMA
+
+	/// Cargo el Alfabeto del Automata
 	vector<char> Alfabeto = CargarAlfabeto();
 
+
+	/// Se Carga Matriz de Incidencia
 	int** Incidencia = MatrizIncidencia(52, int(Alfabeto.size()), Alfabeto);
-	
-	
-	
-	int a;
-	a = EstadoSiguiente(Alfabeto, Incidencia, 0, ';');
-	cout << "Estado Siguiente:   " << a << endl;
-	
-	
-	multimap<int,string>  LS;
-	LS = CargarEstFinales();
-	
-	cout << "Token:   " << TokenEstado(LS, a) << endl;
-	
+
+
+	/// Se Cargan los Estado Finales
+	multimap<int,string>  EFinales = CargarEstFinales();
+
+
+
+
+
+
+
+
+
+
+
+
+
+	///
+
+
+	/// Analisis Lexico Suponiedo que ya tenemos las lineas cargadas
+	ManejadorLineas LineasTexto;
+
+
+
+	/// Se Cargan las "Lineas"
+
+	LineasTexto.AddInstruc("etiquet:,,,,;"); // Linea 1
+	LineasTexto.AddInstruc("ADD [255],R3;"); // Linea 2
+	LineasTexto.AddInstruc("ADD R15,200;"); // Linea 3
+	LineasTexto.AddInstruc("ADD [R15],R3;"); // Linea 4
+	LineasTexto.AddInstruc("ADD R15,[R3];"); // Linea 5
+	LineasTexto.AddInstruc("etiquet:,,,,;"); // Linea 6
+	LineasTexto.AddInstruc("ADD [255],R3;"); // Linea 7
+	LineasTexto.AddInstruc("ADD R15,200;"); // Linea 8
+	LineasTexto.AddInstruc("ADD [R15],R3;"); // Linea 9
+	LineasTexto.AddInstruc("ADD R15,[R3];"); // Linea 10
+
+
+
+
+	/// varible q endica si puede seguir de linea
+	bool PassLinea = true;
+
+
+	/// Inicio ciclos Analisis Lexcio, Para Sacar el Contenido de cada Linea
+	for(int b = 0; b < LineasTexto.CanInst(); b++)
+	{
+		/// Se Agrega la Linea en un Vector Temporal
+		vector<string> Temporal =LineasTexto.SaberInstLinea(b);
+
+		/// Vector temporal donde se van a almacenas los token
+		vector<string> Tokens;
+
+
+		/// Condicion para ver si evaluan las siguiente lineas
+		if(PassLinea == true)
+		{
+
+			/// Variable q indica si se pasa a tokens
+			bool PassToken = true;
+
+
+
+
+			bool LexicoPalLinea = true;
+
+			/// Ciclo que recore las subcadenas de la Linea
+			for(int c = 0; c <int(Temporal.size()); c++)
+			{
+
+				if(LexicoPalLinea == true)
+				{
+					///String temporal donde se va a gurdar la subCadena para recorrerla
+					string Tempo = Temporal[c];
+
+
+					/// Estado Inicial del Automta
+					int EstadoActual = 0;
+
+
+
+					/// Ciclo para recorrer los caracterez
+					for(int z = 0; z < int(Tempo.size()); z++)
+					{
+						EstadoActual = EstadoSiguiente(Alfabeto, Incidencia, EstadoActual, Tempo[z]);
+
+
+
+						/// -2 indica que la letra que leyo no pertenece al Alfabeto
+						/// -1 que no tiene estado siguiente con esa letra y ese estado
+						if(EstadoActual == -1 or EstadoActual == -2)
+						{
+							cout << "Seria Sacar Aviso, Error en la Palabra " << Temporal[c] << "  de la Instruccion, no Pertenece al Lenguaje:    " << b << endl;
+							PassToken = false;
+							LexicoPalLinea = false;
+							PassLinea = false;
+							break;
+
+						}
+
+					}
+					if(PassToken == true)
+					{
+						if(SiEsFinal(EFinales, EstadoActual) == 1)
+						{
+							Tokens.push_back(TokenEstado(EFinales, EstadoActual));
+							//cout << "Token al q pertenece:   "  << TokenEstado(EFinales, EstadoActual) << endl;
+						}
+						else
+						{
+							LexicoPalLinea = false;
+							PassLinea = false;
+							break;
+						}
+
+					}
+				}
+				else
+				{
+					PassLinea = false;
+					break;
+				}
+
+			}
+
+			///Aca se Agregaria el token
+			LineasTexto.AddTokenLinea(Tokens);
+		}
+		else
+		{
+			break;
+		}
+
+	}
+
+	if(PassLinea)
+	{
+		cout << "Paso a Analis Sintactico" << endl;
+		cout << "Cantidad Lineas Tokens:   " << LineasTexto.CanTok() << endl;
+	}
+
+
 	return 0;
 	
 }
