@@ -186,14 +186,14 @@ int main()
 	
 	
 	int a;
-	a = EstadoSiguiente(Alfabeto, Incidencia, 0, ';');
-	cout << "Estado Siguiente:   " << a << endl;
+	//a = EstadoSiguiente(Alfabeto, Incidencia, 0, '');
+	//cout << "Estado Siguiente:   " << a << endl;
 	
 	
 	multimap<int,string>  LS;
 	LS = CargarEstFinales();
 	
-	cout << "Token:   " << TokenEstado(LS, a) << endl;
+	cout << "Token:   " << TokenEstado(LS, ) << endl;
 	
 	return 0;
 	
